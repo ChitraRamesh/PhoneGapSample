@@ -1,0 +1,301 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+<link rel="stylesheet" href="gsma.css">  
+
+<style>
+  .halfModuleHeader {
+    background-color: #fff;
+    border-top: 1px solid #000;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+  }
+  
+  .halfModuleBody {
+    background-color: #fff;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000;
+    padding-left: 10px;
+    padding-bottom: 30px;
+  }
+  
+  .normal {
+    font-weight: normal;
+  }
+  
+  .checkBoxFrame {
+    border: 1px solid #000;
+    padding: 5px;
+    margin: 0px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .gap {
+    padding-right: 60px; 
+  }
+  .textarea{ 
+  width: 200px; 
+  min-width:200px; 
+  max-width:200px; 
+
+  height:200px; 
+  min-height:200px;  
+  max-height:200px;
+}
+</style>
+<div class="col-md-12 ">
+  <div class="row topPadding">
+  
+     <div class="col-md-12">
+      <form class="form-horizontal" ng-show="hasTACRequests">
+        <div class="form-group">            
+         <div class="row">
+          <div class="col-md-11 col-sm-6">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-5 control-label baselineText inverse" > Use previous request as template:</label>
+                <div class="col-sm-6 flush-left">
+                
+                  <select class="form-control form-sm-6"  
+                        ng-options="tacRequest.TACModelNumber for tacRequest in tacRequests track by tacRequest.id"
+                         ng-model="selectedRequest"
+                        ng-change="previousReqSelected(selectedRequest)">
+              </select>
+                    
+                </div>
+                <!-- /form-group -->
+              </div>
+            </form>
+          </div>    
+            </div>    
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6 gap">
+      <div class="row halfModuleHeader">
+        <div class="col-md-12">
+          <h5><span class="text-danger">*</span> TECHNOLOGIES</h5>
+        </div>
+      </div>
+      <div class="row halfModuleBody">
+        <div class="row">
+          <div class="col-sm-2" >
+            <h6>CDMA</h6>
+              
+              <label class="normal" ng-repeat="cdma in vm.tacRequest.HWDetails.cdmaDetails">
+                    <input type="checkbox" ng-model="cdma.enabled"> CDMA
+            </label>
+          </div>
+          <div class="col-sm-2">
+            <h6>WCDMA</h6>
+              
+             <label class="normal" ng-repeat="wcdma in vm.tacRequest.HWDetails.wcdmaDetails">
+                    <input type="checkbox" ng-model="wcdma.enabled"> WCDMA
+            </label>
+          </div>
+          <div class="col-md-3">
+            <h6>GSM</h6>
+            <label class="normal" ng-repeat="gsm in vm.tacRequest.HWDetails.gsmDetails">
+                    <input type="checkbox" ng-model="gsm.enabled"> GSM
+            </label>
+ 
+          </div>
+          <div class="col-md-3">
+            <h6>TD-SCDMA</h6>
+             <label class="normal" ng-repeat="tds in vm.tacRequest.HWDetails.tdSCDMADetails">
+                    <input type="checkbox" ng-model="tds.enabled"> TDS
+            </label>
+<!--
+            <label class="normal">
+              <input type="checkbox"> TD-SCDMA</label>
+-->
+ 
+            <h6>LTE</h6>
+               <label class="normal" ng-repeat="lte in vm.tacRequest.HWDetails.lteDetails">
+                    <input type="checkbox" ng-model="lte.enabled"> LTE
+            </label>
+ 
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h6>Supported frequency bands:</h6>
+            <p class="col-md-4 flush-left">              
+                <button class="btn btn-link" ng-click="editBands()"> Edit Bands</button>
+                </p>
+            <div>
+              <textarea class="col-md-11" ng-Model="vm.tacRequest.HWDetails.supportedFreqBands" placeholder="Make a selection from Edit Bands" ng-nodel="{{  vm.tacRequest.HWDetails.selectedBands     
+ }}">
+                  
+              </textarea>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+ 
+        
+  <div class="row validationControlFrame">
+      
+      <div ng-hide="enteredAllInfo()" >
+     <p class= "statusInfoWarn">  
+         <label><b>*Information Required</b></label>
+      </p>
+    </div>
+ 
+    <div ng-show="enteredAllInfo()" >
+         <p ng-class="{Ready:'statusInfoReady', Done:'statusInfoDone'}[class_name]" >       
+        <input type="checkbox" ng-model="step1VerifyState" ng-change="verifyData()" height="30px"> <b>Click to verify this information is correct </b>
+      </p>
+ 
+    </div>
+    
+</div>
+    </div>
+
+    <div id="deviceDefinitionPanel" class="col-md-6 ">
+      <div class="row halfModuleHeader">
+        <div class="col-md-12">
+          <h5>NON-WWAN</h5>
+        </div>
+      </div>
+      <div class="row halfModuleBody">
+          <div class="row">
+          <div class="col-md-3">
+            <label class="normal">
+              <input type="checkbox" ng-model="wwanSelectAll"> Select All</label>
+          </div>
+        </div>
+        <div class="row checkBoxFrame">
+             
+             <div class="col-md-3" ng-repeat="wwan in vm.tacRequest.HWDetails.nonWWANDetails">
+             <label class="normal" >
+                 
+                    <input type="checkbox"  value = "wwan.enabled || wwanSelectAll"  > {{wwan.name}} 
+            </label>
+            </div> 
+ 
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <h5>INDUSTRIAL DESIGN</h5>
+            <div class="row">
+              <form class="form-horizontal">
+                <div class="form-group">
+                  <label for="primaryCamera" class="col-md-7 control-label normal" style="text-align:left">Primary Camera Megapixels:</label>
+                  <div class="col-md-4">
+                    <input type="number" class="form-control" id="primaryCamera" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.primaryCamera">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="secondaryCamera" class="col-md-7 control-label normal" style="text-align:left" >Secondary/Front Camera Megapixels:</label>
+                  <div class="col-md-4">
+                    <input type="number" class="form-control" id="primaryCamera" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.secondary">
+                  </div>
+
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="screenWidth" class="col-md-6 control-label normal" style="text-align:left" >Screen Width:</label>
+                <div class="col-md-4 flush-left">
+                  <input  type="number" min="0" class="form-control" id="screenWidth" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.width">
+                </div>
+                <label class="col-md-1 control-label normal flush-left">pixels</label>
+              </div>
+              <div class="form-group">
+                <label for="screenHeight" class="col-md-6 control-label normal" style="text-align:left">Screen Height:</label>
+                <div class="col-md-4 flush-left">
+                  <input  type="number" min="0" class="form-control" id="screenHeight" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.height">
+                </div>
+                <label class="col-md-1 control-label normal flush-left">pixels</label>
+              </div>
+              <div class="form-group">
+                <label for="screenHeight" class="col-md-6 control-label normal" style="text-align:left">Screen Diagonal:</label>
+                <div class="col-md-4 flush-left">
+                  <input type="number" min="0"class="form-control" id="screenHeight" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.diagonal">
+                </div>
+                <label class="col-md-1 control-label normal flush-left">inches</label>
+              </div>
+            </form>
+          </div>
+          <div class="col-md-6">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="screenPPI" class="col-md-8 control-label normal" style="text-align:left">Screen PPI:</label>
+                <div class="col-md-4 flush-left">
+                  <input  type="number" min="0" class="form-control" id="screenPPI" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.ppi">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="screenDPR" class="col-md-8 control-label normal" style="text-align:left">Device Pixel Ratio:</label>
+                <div class="col-md-4 flush-left">
+                  <input  type="number" min="0" class="form-control" id="screenDPR" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.pixelRatio">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="screenCD" class="col-md-8 control-label normal" style="text-align:left">Screen Color Depth:</label>
+                <div class="col-md-4 flush-left">
+                  <input  type="number" min="0" class="form-control" id="screenCD" placeholder="" ng-model="vm.tacRequest.HWDetails.industrialDesign.colorDepth">
+                </div>
+              </div>
+            </form>
+          </div>
+          
+          <div class="col-md-12">
+            <label class="normal">
+              <input type="checkbox" ng-model="vm.tacRequest.HWDetails.industrialDesign.touchScreen"> Touchscreen</label>
+           </div>
+          
+        </div>
+      </div>
+<!--
+      <div class="row validationControlFrame">
+        <p class="bg-warning">
+          <input type="checkbox" ng-model="step1VerifyState" ng-change="verifyData()"> Click to verify this information is correct</p>
+      </div>
+-->
+          <div class="row validationControlFrame">
+            <div   >
+                 <p ng-class="{Ready:'statusInfoReady', Done:'statusInfoDone'}[class_name2]" >       
+                <input type="checkbox" ng-model="step2VerifyState" ng-change="verifyData2()" height="30px"> <b>Click to verify this information is correct </b>
+              </p>
+ 
+    </div>
+    
+</div>
+        
+    </div>
+
+  </div>
+
+
+
+ <div >
+    <div class="col-xs-5">
+        <button class="btn btn-default" ng-click="cancelRequest()"><b>Cancel This Request </b></button>
+    </div>
+    
+    <div class="col-xs-5">
+        <button class="btn  btn-default" ng-click="saveTac()"><b>Save This Information</b></button>
+    </div>
+    <div class="col-xs-3">
+        <button class="btn"  ng:class="{true:'btn-default', false:'btn-info'}[isDisabled &&  !shortCutSet]" ng-click="displayNextForm()"><b>Continue</b>   
+        </button>
+        
+ 
+ 
+    </div>
+        
+  </div>
+</div>
